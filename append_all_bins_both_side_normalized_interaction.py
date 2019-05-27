@@ -13,15 +13,15 @@ def write_out_binding_interactions_sep_chroms(data,viewregion,resolution,outdir)
     columns = np.arange(-1*viewregion+resolution,viewregion,resolution)
             
     for chrom in utils.chroms:
-        matrix_file = '{}/{}_{}_res_{}_view_region_{}.csv'.format(outdir,data,chrom,resolution, viewregion)
+        matrix_file = outdir+os.sep+'{}_{}_res_{}_view_region_{}.csv'.format(data,chrom,resolution, viewregion)
         all_region_data_out = outdir+os.sep+'{}_res{}_view{}_{}.csv'.format(data,resolution,viewregion,chrom)
 
         if os.path.isfile(matrix_file):
             with open(matrix_file) as matrix_inf:
                 matrix_df = pd.read_csv(matrix_inf,sep='\t',index_col=0)
-            #####
-            # process the matrix df
-            #####
+                #####
+                # process the matrix df
+                #####
         
             # normalization of the data, each interaction score is divided by average interaction score with same distances
             matrix_df = matrix_df/matrix_df.mean()

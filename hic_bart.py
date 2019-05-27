@@ -1,6 +1,5 @@
 import os, sys
 import argparse
-import pandas as pd
 
 import hicpro_matrix_to_juicer_matrix_format
 import get_completed_viewregion_interaction
@@ -53,7 +52,6 @@ def main(args):
     # output: {treat}_over_{control}_res{}_view{}.csv
     sys.stdout.write("Step4: pair test between control and treat..\n")
     hic_interaction_change.compare_hic_interaction([t_prefix, c_prefix], args.region, args.resolution, args.outdir, args.outdir)
-
 
 
 if __name__ == '__main__':
