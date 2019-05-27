@@ -5,7 +5,6 @@ import pandas as pd
 import hicpro_matrix_to_juicer_matrix_format
 import get_completed_viewregion_interaction
 import append_all_bins_both_side_normalized_interaction
-# import union_binding_viewregion_bothside_interaction
 import hic_interaction_change
 
 import utils
@@ -17,11 +16,11 @@ def main(args):
     res_c = utils.get_resolution(args.c_index)
     res_t = utils.get_resolution(args.t_index)
     if res_c != res_t :
-        sys.stderr.write("Resolutions from two Hi-C index file are not the same..\n")
+        sys.stderr.write("Error: Resolutions from two Hi-C index file are not the same!\n")
         sys.exit(1)
     args.resolution = res_c
 
-    # get original Hi-C data from juicer format, skip iced matrix..
+    # get prefix of file
     c_prefix = os.path.splitext(os.path.basename(args.c_index))[0]
     t_prefix = os.path.splitext(os.path.basename(args.t_index))[0]
 
@@ -50,11 +49,6 @@ def main(args):
     sys.stdout.write("Step3: mirror the interactions to +- regions/2.. \n")
     append_all_bins_both_side_normalized_interaction.write_out_binding_interactions_sep_chroms(c_prefix, args.region, args.resolution, args.outdir)
     append_all_bins_both_side_normalized_interaction.write_out_binding_interactions_sep_chroms(t_prefix, args.region, args.resolution, args.outdir)
-
-
-    # sys.stdout.write("Step4: union {} bothside interaction..\n".format(args.region))
-    # union_binding_viewregion_bothside_interaction.write_out_binding_interactions_all_chroms(utils.all_bindings, c_prefix, args.region, args.resolution, 'union', args.outdir)
-    # union_binding_viewregion_bothside_interaction.write_out_binding_interactions_all_chroms(utils.all_bindings, t_prefix, args.region, args.resolution, 'union', args.outdir)
 
     # output: {treat}_over_{control}_res{}_view{}.csv
     sys.stdout.write("Step4: pair test between control and treat..\n")

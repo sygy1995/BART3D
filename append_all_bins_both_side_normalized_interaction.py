@@ -31,7 +31,8 @@ def write_out_binding_interactions_sep_chroms(data,viewregion,resolution,outdir)
             matrix_df.columns = matrix_df.columns.astype(int)
             matrix_df = matrix_df[[i for i in map(int,columns)]]
             # === end
-            
+
+            matrix_df.fillna(0)
             matrix_df.to_csv(all_region_data_out)
     
         
