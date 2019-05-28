@@ -19,6 +19,10 @@ def main(args):
         sys.exit(1)
     args.resolution = res_c
 
+    # TODO: according to different species, get chrom and length for the species
+    # args.species
+
+
     # get prefix of file
     c_prefix = os.path.splitext(os.path.basename(args.c_index))[0]
     t_prefix = os.path.splitext(os.path.basename(args.t_index))[0]
@@ -62,11 +66,13 @@ if __name__ == '__main__':
     parser.add_argument('-ti', '--treatindex', action='store', type=str, dest='t_index', required=True, help='Hi-C index file for treat', metavar='<str>')
     parser.add_argument('-tm', '--treatmatrix', action='store', type=str, dest='t_matrix', required=True, help='Hi-C matrix file for treat', metavar='<str>')
 
+    parser.add_argument('-s', '--species',dest='species',type=str,metavar='<species>',choices=['hg38','mm10'],required=True,help='Species, please choose from "hg38" or "mm10".')
+
     parser.add_argument('-o', '--outdir', action='store', type=str, dest='outdir', help='output directory for Hi-C bart', metavar='<str>', default='hic_interaction_output/')
     parser.add_argument('-r', '--region', action='store', type=int, dest='region', help='Regions to expand when finding interactions', metavar='<int>', default=500000)
 
     args = parser.parse_args()
-    if(len(sys.argv)) < 4: # two index, two matrix file are required
+    if(len(sys.argv)) < 5: # two index, two matrix file, one species, are required
         parser.print_help()
         sys.exit(1)
 
