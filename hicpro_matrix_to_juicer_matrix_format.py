@@ -6,7 +6,7 @@ import bisect
 
 import utils
 
-
+# code before optimization
 # def write_out_juicer_format_matrix(order_index_file,matrix_file,outdir,data,resolution,flag):
 
 #     # read index file
@@ -35,16 +35,18 @@ import utils
 
 def write_out_juicer_format_matrix(order_index_file,matrix_file,outdir,data,resolution,flag):
     # load in the index bed file
-    with open(order_index_file) as order_index_inf: 
-        index_df = pd.read_csv(order_index_inf,sep='\t',header=None)
-    index_df.columns = ['chr','x','y','id']
+    f = open(order_index_file)
+    index = {}
+    for line in f:
+        sline = line.strip().split()
+        if sline[0] not in index:
+            index[sline[0]] = {}
+        index[sline[0]][int(sline[3])] = int(sline[1])
 
-    # seperate index for each chromosome into distinct dataframes
+    # save the start and end index of each chromosome into a dict
     chrome_index_range = {}
     for chrom in utils.chroms:
-        vars()['index_df_'+chrom] = index_df[index_df['chr']==chrom]
-        # save the start and end index of each chromosome into a dict
-        chrome_index_range[chrom] = [min(vars()['index_df_'+chrom]['id']),max(vars()['index_df_'+chrom]['id'])]
+        chrome_index_range[chrom] = [min(index[chrom].keys()),max(index[chrom].keys())]
 
     # load in the matrix file
     matrix_df = pd.read_csv(matrix_file,sep='\t',header=None)
@@ -76,8 +78,7 @@ def write_out_juicer_format_matrix(order_index_file,matrix_file,outdir,data,reso
     # basically the same idea as previouse, just that we are only loading chromosomal specific interaction matrix in each iteration
     for chrom in utils.chroms:
         outfile = open(outdir+os.sep+'{}_{}_{}_{}.matrix'.format(data,resolution,flag,chrom),'w')
-        vars()['index_df_'+chrom].index = vars()['index_df_'+chrom]['id']
-        index_dict = vars()['index_df_'+chrom][['x']].to_dict()['x']
+        index_dict = index[chrom]
         for line in list(zip(vars()['matrix_df_'+chrom]['id1'],vars()['matrix_df_'+chrom]['id2'],vars()['matrix_df_'+chrom]['count'])):
             id_a,id_b,score = int(line[0]),int(line[1]),float(line[2])
             outfile.write('{}\t{}\t{:.2f}\n'.format(index_dict[id_a],index_dict[id_b],score))
