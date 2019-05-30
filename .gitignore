@@ -32,3 +32,6 @@ hic_interaction_output/
 
 # HiC reference data
 *.csv
+
+#test
+test.py
