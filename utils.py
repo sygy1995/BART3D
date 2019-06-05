@@ -35,15 +35,33 @@ def get_resolution(hic_index_file):
     return resolution
 
 # get matrix df according to view region, default=500,000bps
-def get_matrix_df(matrix_file, view_region):
+# def get_matrix_df(matrix_file, view_region):
+#     if os.path.getsize(matrix_file) == 0:
+#         return None
+
+#     with open(matrix_file) as matrix_inf:
+#         matrix_df = pd.read_csv(matrix_inf,sep='\t',header=None)
+#         matrix_df.columns = ['x','y','score']
+#     matrix_df = matrix_df[matrix_df['y']-matrix_df['x']<view_region]
+#     # get the distances between x and y
+#     matrix_df['dis'] = matrix_df['y']-matrix_df['x']
+#     return matrix_df
+
+def get_matrix_dict(matrix_file, view_region):
     if os.path.getsize(matrix_file) == 0:
         return None
+    f = open(matrix_file)
+    matrix_dict = {}
+    for line in f:
+        sline = line.strip().split()
+        start = int(sline[0])
+        end = int(sline[1])
+        count = float(sline[2])
+        if (end-start) < view_region:
+            if start not in matrix_dict:
+                matrix_dict[start] = {}
+            matrix_dict[start][end] = count
+    return matrix_dict
 
-    with open(matrix_file) as matrix_inf:
-        matrix_df = pd.read_csv(matrix_inf,sep='\t',header=None)
-        matrix_df.columns = ['x','y','score']
-    matrix_df = matrix_df[matrix_df['y']-matrix_df['x']<view_region]
-    # get the distances between x and y
-    matrix_df['dis'] = matrix_df['y']-matrix_df['x']
-    return matrix_df
+
 

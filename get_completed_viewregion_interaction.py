@@ -8,7 +8,28 @@ import re,bisect
 import utils
 
 # @marvinquiet: remove normalization
-def write_out_interactions(matrix_df,view_region,outdir,data,resolution,chrom):
+# def write_out_interactions(matrix_df,view_region,outdir,data,resolution,chrom):
+#     # for each position/view_pos in chrom, get the interaction with downstream loci within view_region
+#     outfile_name = outdir+os.sep+'{}_{}_res_{}_view_region_{}.csv'.format(data,chrom,resolution,view_region)
+#     if os.path.isfile(outfile_name):
+#         print('Do not re-write the files')
+#         exit()
+#     out_file = open(outfile_name,'w')
+#     view_poses = np.arange(0,utils.chrom_size_df.loc[chrom,'len'],resolution)
+
+#     out_file.write('{}\t{}\n'.format('dis','\t'.join(map(str,np.arange(0,view_region,resolution)))))
+#     for view_pos in view_poses:
+#         view_df = matrix_df[matrix_df['x']==view_pos]
+#         view_df = view_df[['score','dis']]; 
+#         standard_df = pd.DataFrame(columns = ['dis'],index = np.arange(0,view_region,resolution))
+#         standard_df['dis']=standard_df.index
+#         # the matrix_df has been restricted within view-region, here we could use outer or left
+#         # here is to get each of the interaction scores within the view region, if the interaction score exist in view_df, fill with 0
+#         merge_df = pd.merge(standard_df,view_df,how='outer').fillna(0)
+#         out_file.write('{}\t{}\n'.format(view_pos,'\t'.join(map(str,merge_df.score.values))));
+#     out_file.close()
+
+def write_out_interactions(matrix_dict,view_region,outdir,data,resolution,chrom):
     # for each position/view_pos in chrom, get the interaction with downstream loci within view_region
     outfile_name = outdir+os.sep+'{}_{}_res_{}_view_region_{}.csv'.format(data,chrom,resolution,view_region)
     if os.path.isfile(outfile_name):
@@ -19,15 +40,14 @@ def write_out_interactions(matrix_df,view_region,outdir,data,resolution,chrom):
 
     out_file.write('{}\t{}\n'.format('dis','\t'.join(map(str,np.arange(0,view_region,resolution)))))
     for view_pos in view_poses:
-        view_df = matrix_df[matrix_df['x']==view_pos]
-        view_df = view_df[['score','dis']]; 
-        standard_df = pd.DataFrame(columns = ['dis'],index = np.arange(0,view_region,resolution))
-        standard_df['dis']=standard_df.index
-        # the matrix_df has been restricted within view-region, here we could use outer or left
-        # here is to get each of the interaction scores within the view region, if the interaction score exist in view_df, fill with 0
-        merge_df = pd.merge(standard_df,view_df,how='outer').fillna(0)
-        out_file.write('{}\t{}\n'.format(view_pos,'\t'.join(map(str,merge_df.score.values))));
-    out_file.close()
+        if view_pos in matrix_dict:
+            interactions = [0.0]*int(view_region/resolution)
+            for anchor in matrix_dict[view_pos]:
+                interactions[int((anchor-view_pos)/resolution)] = matrix_dict[view_pos][anchor]
+        else:
+            interactions = [0.0]*int(view_region/resolution)
+        interactions.insert(0,view_pos.item())
+        out_file.write('\t'.join(map(str,interactions))+'\n')
     
 
 

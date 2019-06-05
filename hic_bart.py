@@ -36,7 +36,7 @@ def main(args):
     sys.stdout.write("Step2: get complete Hi-C interaction within {} region.. \n".format(args.region))
     for chrom in utils.chroms:
         c_matrix_file = args.outdir+os.sep+'{}_{}_{}_{}.matrix'.format(c_prefix, args.resolution, 'control', chrom)
-        c_matrix_df = utils.get_matrix_df(c_matrix_file, args.region)
+        c_matrix_df = utils.get_matrix_dict(c_matrix_file, args.region)
         if c_matrix_df is None:
             continue
         get_completed_viewregion_interaction.write_out_interactions(c_matrix_df, args.region, args.outdir, c_prefix, args.resolution, chrom)
