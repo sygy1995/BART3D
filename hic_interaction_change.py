@@ -53,7 +53,6 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
     # compr_data_out.write('{}\t{}\t{}\t{}\t{}\n'.format('id','stats','pvalue','treat_mean','ctrl_mean'))
 
     columns = np.arange(-1*viewregion+resolution,viewregion,resolution)       
-    print(utils.chroms)
     for chrom in utils.chroms:
         treat_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(treat,resolution,viewregion,chrom)
         ctrl_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(ctrl,resolution,viewregion,chrom)
