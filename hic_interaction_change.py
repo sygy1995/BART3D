@@ -53,12 +53,14 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
     # compr_data_out.write('{}\t{}\t{}\t{}\t{}\n'.format('id','stats','pvalue','treat_mean','ctrl_mean'))
 
     columns = np.arange(-1*viewregion+resolution,viewregion,resolution)       
-    
+    print(utils.chroms)
     for chrom in utils.chroms:
+        print(chrom)
         treat_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(treat,resolution,viewregion,chrom)
         ctrl_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(ctrl,resolution,viewregion,chrom)
         
         if not (os.path.isfile(treat_hic_file) and os.path.isfile(ctrl_hic_file)):
+            print('here')
             continue
 
         with open(treat_hic_file) as treat_inf, open(ctrl_hic_file) as ctrl_inf:
@@ -66,11 +68,11 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
             ctrl_lines = ctrl_inf.readlines()
             n = len(treat_lines)
             for i in range(1,n):
-                treat = list(map(float,treat_lines[i].strip().split(',')))
-                ctrl = list(map(float,ctrl_lines[i].strip().split(',')))
-                index = treat[0]
-                view_pos_treat_data = treat[1:]
-                view_pos_ctrl_data = ctrl[1:]
+                treat_list = list(map(float,treat_lines[i].strip().split(',')))
+                ctrl_list = list(map(float,ctrl_lines[i].strip().split(',')))
+                index = treat_list[0]
+                view_pos_treat_data = treat_list[1:]
+                view_pos_ctrl_data = ctrl_list[1:]
                 stats_score,pvalue = stats.ttest_rel(view_pos_treat_data,view_pos_ctrl_data)
                 if np.isnan(pvalue):
                     pvalue = 1
