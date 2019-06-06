@@ -5,6 +5,46 @@ from scipy import stats
 
 import utils
 
+# def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_interaction_info_dir,outdir):
+#     treat,ctrl = compr_data[0],compr_data[1]
+#     compr_data_out = open(outdir+os.sep+'{}_over_{}_res{}_view{}.bed'.format(treat,ctrl,resolution,viewregion),'w')
+
+#     # output data: chr start end . -10log(pvalue) .
+#     # compr_data_out.write('{}\t{}\t{}\t{}\t{}\n'.format('id','stats','pvalue','treat_mean','ctrl_mean'))
+
+#     columns = np.arange(-1*viewregion+resolution,viewregion,resolution)       
+    
+#     for chrom in utils.chroms:
+#         treat_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(treat,resolution,viewregion,chrom)
+#         ctrl_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(ctrl,resolution,viewregion,chrom)
+        
+#         if not (os.path.isfile(treat_hic_file) and os.path.isfile(ctrl_hic_file)):
+#             continue
+
+#         with open(treat_hic_file) as treat_inf, open(ctrl_hic_file) as ctrl_inf:
+#             treat_df = pd.read_csv(treat_inf,index_col=0)
+#             ctrl_df = pd.read_csv(ctrl_inf,index_col=0)
+        
+#         #####
+#         # get paired t-test pvalue
+#         #####
+#         if treat_df.index.tolist() != ctrl_df.index.tolist():
+#             sys.stderr.write("Error: hic interaction has different index between normal and treat! \n")
+#             sys.exit(1)
+
+#         for index in treat_df.index.tolist():
+#             view_pos_treat_data = np.nan_to_num(treat_df.loc[index][map(str,columns)].values)
+#             view_pos_ctrl_data = np.nan_to_num(ctrl_df.loc[index][map(str,columns)].values)
+#             stats_score,pvalue = stats.ttest_rel(view_pos_treat_data,view_pos_ctrl_data)
+#             if np.isnan(pvalue):
+#                 pvalue = 1
+#             treat_mean = np.mean(view_pos_treat_data)
+#             ctrl_mean = np.mean(view_pos_ctrl_data)
+#             # output data: chr start end . -10log(pvalue) .
+#             compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, index, index+resolution, -np.log10(pvalue)))
+#             # compr_data_out.write('{}\t{:.3f}\t{:.3e}\t{:.3f}\t{:.3f}\n'.format(udhs_id,stats_score,pvalue,treat_mean,ctrl_mean))
+#     compr_data_out.close()
+
 def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_interaction_info_dir,outdir):
     treat,ctrl = compr_data[0],compr_data[1]
     compr_data_out = open(outdir+os.sep+'{}_over_{}_res{}_view{}.bed'.format(treat,ctrl,resolution,viewregion),'w')
@@ -22,29 +62,21 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
             continue
 
         with open(treat_hic_file) as treat_inf, open(ctrl_hic_file) as ctrl_inf:
-            treat_df = pd.read_csv(treat_inf,index_col=0)
-            ctrl_df = pd.read_csv(ctrl_inf,index_col=0)
-        
-        #####
-        # get paired t-test pvalue
-        #####
-        if treat_df.index.tolist() != ctrl_df.index.tolist():
-            sys.stderr.write("Error: hic interaction has different index between normal and treat! \n")
-            sys.exit(1)
-
-        for index in treat_df.index.tolist():
-            view_pos_treat_data = np.nan_to_num(treat_df.loc[index][map(str,columns)].values)
-            view_pos_ctrl_data = np.nan_to_num(ctrl_df.loc[index][map(str,columns)].values)
-            stats_score,pvalue = stats.ttest_rel(view_pos_treat_data,view_pos_ctrl_data)
-            if np.isnan(pvalue):
-                pvalue = 1
-            treat_mean = np.mean(view_pos_treat_data)
-            ctrl_mean = np.mean(view_pos_ctrl_data)
-            # output data: chr start end . -10log(pvalue) .
-            compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, index, index+resolution, -np.log10(pvalue)))
-            # compr_data_out.write('{}\t{:.3f}\t{:.3e}\t{:.3f}\t{:.3f}\n'.format(udhs_id,stats_score,pvalue,treat_mean,ctrl_mean))
+            treat_lines = treat_inf.readlines()
+            ctrl_lines = ctrl_inf.readlines()
+            n = len(treat_lines)
+            for i in range(1,n):
+                treat = list(map(float,treat_lines[i].strip().split(',')))
+                ctrl = list(map(float,ctrl_lines[i].strip().split(',')))
+                index = treat[0]
+                view_pos_treat_data = treat[1:]
+                view_pos_ctrl_data = ctrl[1:]
+                stats_score,pvalue = stats.ttest_rel(view_pos_treat_data,view_pos_ctrl_data)
+                if np.isnan(pvalue):
+                    pvalue = 1
+                    # output data: chr start end . -10log(pvalue) .
+                compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, index, index+resolution, -np.log10(pvalue)))
     compr_data_out.close()
-    
             
 def main(viewregion,normalization,chrom):
     outdir = 'f1_UDHS_interaction_change'
