@@ -55,12 +55,10 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
     columns = np.arange(-1*viewregion+resolution,viewregion,resolution)       
     print(utils.chroms)
     for chrom in utils.chroms:
-        print(chrom)
         treat_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(treat,resolution,viewregion,chrom)
         ctrl_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(ctrl,resolution,viewregion,chrom)
         
         if not (os.path.isfile(treat_hic_file) and os.path.isfile(ctrl_hic_file)):
-            print('here')
             continue
 
         with open(treat_hic_file) as treat_inf, open(ctrl_hic_file) as ctrl_inf:
