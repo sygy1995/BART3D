@@ -65,13 +65,15 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
             ctrl_lines = ctrl_inf.readlines()
             n = len(treat_lines)
             for i in range(1,n):
-                treat_list = list(map(float,treat_lines[i].strip().split(',')))
-                ctrl_list = list(map(float,ctrl_lines[i].strip().split(',')))
-                index = treat_list[0]
-                view_pos_treat_data = treat_list[1:]
-                view_pos_ctrl_data = ctrl_list[1:]
-                stats_score,pvalue = stats.ttest_rel(view_pos_treat_data,view_pos_ctrl_data)
-                if np.isnan(pvalue):
+                try:
+                    treat_list = list(map(float,treat_lines[i].strip().split(',')))
+                    ctrl_list = list(map(float,ctrl_lines[i].strip().split(',')))
+                    index = int(treat_list[0])
+                    view_pos_treat_data = treat_list[1:]
+                    view_pos_ctrl_data = ctrl_list[1:]
+                    stats_score,pvalue = stats.ttest_rel(view_pos_treat_data,view_pos_ctrl_data)
+                except:
+                    index = int(treat_lines[i].strip().split(',')[0])
                     pvalue = 1
                     # output data: chr start end . -10log(pvalue) .
                 compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, index, index+resolution, -np.log10(pvalue)))
