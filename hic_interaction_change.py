@@ -72,6 +72,8 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
                     view_pos_treat_data = treat_list[1:]
                     view_pos_ctrl_data = ctrl_list[1:]
                     stats_score,pvalue = stats.ttest_rel(view_pos_treat_data,view_pos_ctrl_data)
+                    if np.isnan(pvalue):
+                        pvalue = 1
                 except:
                     index = int(treat_lines[i].strip().split(',')[0])
                     pvalue = 1
