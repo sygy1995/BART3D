@@ -32,38 +32,47 @@ def main(args):
 
     # output: {prefix}_{resolution}_{flag}_{chrom}.matrix
     sys.stdout.write("Step1: get original Hi-C matrix data from Juicer format..\n")
-    hicpro_matrix_to_juicer_matrix_format.write_out_juicer_format_matrix(args.c_index, args.c_matrix, args.outdir, c_prefix, args.resolution, 'control')
-    hicpro_matrix_to_juicer_matrix_format.write_out_juicer_format_matrix(args.t_index, args.t_matrix, args.outdir, t_prefix, args.resolution, 'treat')
+    hicpro_matrix_to_juicer_matrix_format.write_out_juicer_format_matrix(args.c_index, args.c_matrix, args.outdir, c_prefix, args.resolution, 'control', args.species)
+    hicpro_matrix_to_juicer_matrix_format.write_out_juicer_format_matrix(args.t_index, args.t_matrix, args.outdir, t_prefix, args.resolution, 'treat', args.species)
 
     tock = time.time()-tick
     print('reading '+str(tock))
     # output: {prefix}_{chrom}_res_{resolution}_view_region_{region}.csv
     sys.stdout.write("Step2: get complete Hi-C interaction within {} region.. \n".format(args.region))
-    for chrom in utils.chroms:
+
+    if args.species=='hg38':
+        chroms = utils.chroms_hg38
+    elif args.species=='mm10':
+        chroms = utils.chroms_mm10
+    else:
+        sys.stderr.write("Error: Species has to be either hg38 or mm10.\n")
+        sys.exit(1)
+
+    for chrom in chroms:
         c_matrix_file = args.outdir+os.sep+'{}_{}_{}_{}.matrix'.format(c_prefix, args.resolution, 'control', chrom)
         c_matrix_df = utils.get_matrix_dict(c_matrix_file, args.region)
         if c_matrix_df is None:
             continue
-        get_completed_viewregion_interaction.write_out_interactions(c_matrix_df, args.region, args.outdir, c_prefix, args.resolution, chrom)
+        get_completed_viewregion_interaction.write_out_interactions(c_matrix_df, args.region, args.outdir, c_prefix, args.resolution, chrom, args.species)
         
         t_matrix_file = args.outdir+os.sep+'{}_{}_{}_{}.matrix'.format(t_prefix, args.resolution, 'treat', chrom)
         t_matrix_df = utils.get_matrix_dict(t_matrix_file, args.region)
         if t_matrix_df is None:
             continue
-        get_completed_viewregion_interaction.write_out_interactions(t_matrix_df, args.region, args.outdir, t_prefix, args.resolution, chrom)
+        get_completed_viewregion_interaction.write_out_interactions(t_matrix_df, args.region, args.outdir, t_prefix, args.resolution, chrom, args.species)
 
     tock = time.time()-tick
     print('viewregion '+str(tock))
     # output: {prefix}_res{resolution}_view{region}_{chrom}.csv
     sys.stdout.write("Step3: mirror the interactions to +- regions/2.. \n")
-    append_all_bins_both_side_normalized_interaction.write_out_binding_interactions_sep_chroms(c_prefix, args.region, args.resolution, args.outdir)
-    append_all_bins_both_side_normalized_interaction.write_out_binding_interactions_sep_chroms(t_prefix, args.region, args.resolution, args.outdir)
+    append_all_bins_both_side_normalized_interaction.write_out_binding_interactions_sep_chroms(c_prefix, args.region, args.resolution, args.outdir, args.species)
+    append_all_bins_both_side_normalized_interaction.write_out_binding_interactions_sep_chroms(t_prefix, args.region, args.resolution, args.outdir, args.species)
 
     tock = time.time()-tick
     print('normalizing '+str(tock))
     # output: {treat}_over_{control}_res{}_view{}.csv
     sys.stdout.write("Step4: pair test between control and treat..\n")
-    hic_interaction_change.compare_hic_interaction([t_prefix, c_prefix], args.region, args.resolution, args.outdir, args.outdir)
+    hic_interaction_change.compare_hic_interaction([t_prefix, c_prefix], args.region, args.resolution, args.outdir, args.outdir, args.species)
 
     tock = time.time()-tick
     print('finished '+str(tock))

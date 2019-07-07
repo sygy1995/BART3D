@@ -9,10 +9,15 @@ import utils
 
 
 # === @marvinquiet: remove normalization
-def write_out_binding_interactions_sep_chroms(data,viewregion,resolution,outdir):
+def write_out_binding_interactions_sep_chroms(data,viewregion,resolution,outdir,species):
     columns = np.arange(-1*viewregion+resolution,viewregion,resolution)
-            
-    for chrom in utils.chroms:
+    
+    if species=='hg38':
+        chroms = utils.chroms_hg38
+    elif species=='mm10':
+        chroms = utils.chroms_mm10
+
+    for chrom in chroms:
         matrix_file = outdir+os.sep+'{}_{}_res_{}_view_region_{}.csv'.format(data,chrom,resolution, viewregion)
         all_region_data_out = outdir+os.sep+'{}_res{}_view{}_{}.csv'.format(data,resolution,viewregion,chrom)
 

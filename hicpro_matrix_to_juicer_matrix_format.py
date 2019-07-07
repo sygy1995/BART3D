@@ -33,7 +33,7 @@ import utils
 #         matrix_inf.close()
 #         outfile.close()
 
-def write_out_juicer_format_matrix(order_index_file,matrix_file,outdir,data,resolution,flag):
+def write_out_juicer_format_matrix(order_index_file,matrix_file,outdir,data,resolution,flag, species):
     # load in the index bed file
     f = open(order_index_file)
     index = {}
@@ -44,14 +44,19 @@ def write_out_juicer_format_matrix(order_index_file,matrix_file,outdir,data,reso
         index[sline[0]][int(sline[3])] = int(sline[1])
 
     # save the start and end index of each chromosome into a dict
+    if species=='hg38':
+        chroms = utils.chroms_hg38
+    elif species=='mm10':
+        chroms = utils.chroms_mm10
+
     chrome_index_range = {}
-    for chrom in utils.chroms:
+    for chrom in chroms:
         chrome_index_range[chrom] = [min(index[chrom].keys()),max(index[chrom].keys())]
 
     # load in the matrix file
     matrix_df = pd.read_csv(matrix_file,sep='\t',header=None)
     matrix_df.columns = ['id1','id2','count']
-    for chrom in utils.chroms:
+    for chrom in chroms:
         # assume that the matrix file is already sorted
         # bisect out the first and last id1 that is in this chromosome
         low1 = bisect.bisect_left(matrix_df['id1'],chrome_index_range[chrom][0])
@@ -76,7 +81,7 @@ def write_out_juicer_format_matrix(order_index_file,matrix_file,outdir,data,reso
     del matrix_df
 
     # basically the same idea as previouse, just that we are only loading chromosomal specific interaction matrix in each iteration
-    for chrom in utils.chroms:
+    for chrom in chroms:
         outfile = open(outdir+os.sep+'{}_{}_{}_{}.matrix'.format(data,resolution,flag,chrom),'w')
         index_dict = index[chrom]
         for line in list(zip(vars()['matrix_df_'+chrom]['id1'],vars()['matrix_df_'+chrom]['id2'],vars()['matrix_df_'+chrom]['count'])):

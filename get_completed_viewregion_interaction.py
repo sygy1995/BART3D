@@ -29,14 +29,20 @@ import utils
 #         out_file.write('{}\t{}\n'.format(view_pos,'\t'.join(map(str,merge_df.score.values))));
 #     out_file.close()
 
-def write_out_interactions(matrix_dict,view_region,outdir,data,resolution,chrom):
+def write_out_interactions(matrix_dict,view_region,outdir,data,resolution,chrom, species):
     # for each position/view_pos in chrom, get the interaction with downstream loci within view_region
     outfile_name = outdir+os.sep+'{}_{}_res_{}_view_region_{}.csv'.format(data,chrom,resolution,view_region)
     if os.path.isfile(outfile_name):
         print('Do not re-write the files')
         exit()
     out_file = open(outfile_name,'w')
-    view_poses = np.arange(0,utils.chrom_size_df.loc[chrom,'len'],resolution)
+
+    if species=='hg38':
+        chrom_size_df = utils.chrom_size_df_hg38
+    elif species=='mm10':
+        chrom_size_df = utils.chrom_size_df_mm10
+
+    view_poses = np.arange(0,chrom_size_df.loc[chrom,'len'],resolution)
 
     out_file.write('{}\t{}\n'.format('dis','\t'.join(map(str,np.arange(0,view_region,resolution)))))
     for view_pos in view_poses:

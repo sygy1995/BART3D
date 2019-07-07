@@ -45,15 +45,21 @@ import utils
 #             # compr_data_out.write('{}\t{:.3f}\t{:.3e}\t{:.3f}\t{:.3f}\n'.format(udhs_id,stats_score,pvalue,treat_mean,ctrl_mean))
 #     compr_data_out.close()
 
-def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_interaction_info_dir,outdir):
+def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_interaction_info_dir,outdir, species):
     treat,ctrl = compr_data[0],compr_data[1]
     compr_data_out = open(outdir+os.sep+'{}_over_{}_res{}_view{}.bed'.format(treat,ctrl,resolution,viewregion),'w')
 
     # output data: chr start end . -10log(pvalue) .
     # compr_data_out.write('{}\t{}\t{}\t{}\t{}\n'.format('id','stats','pvalue','treat_mean','ctrl_mean'))
 
-    columns = np.arange(-1*viewregion+resolution,viewregion,resolution)       
-    for chrom in utils.chroms:
+    columns = np.arange(-1*viewregion+resolution,viewregion,resolution)    
+       
+    if species=='hg38':
+        chroms = utils.chroms_hg38
+    elif species=='mm10':
+        chroms = utils.chroms_mm10
+
+    for chrom in chroms:
         treat_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(treat,resolution,viewregion,chrom)
         ctrl_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(ctrl,resolution,viewregion,chrom)
         
