@@ -6,7 +6,7 @@ import pandas as pd
 ## basic models for commonly used data 
 ##########################################
 chrom_size_file_hg38 = 'hg38_clean.chrom.sizes'
-chrom_size_df_hg38 = pd.read_csv(chrom_size_file,sep='\t',header=None,index_col=0);
+chrom_size_df_hg38 = pd.read_csv(chrom_size_file_hg38,sep='\t',header=None,index_col=0);
 chrom_size_df_hg38.columns = ['len']
 
 chroms_hg38 = ['chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9',\
@@ -14,7 +14,7 @@ chroms_hg38 = ['chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9',\
              'chr18','chr19','chr20','chr21','chr22','chrX','chrY']
 
 chrom_size_file_mm10 = 'mm10_clean.chrom.sizes'
-chrom_size_df_mm10 = pd.read_csv(chrom_size_file,sep='\t',header=None,index_col=0);
+chrom_size_df_mm10 = pd.read_csv(chrom_size_file_mm10,sep='\t',header=None,index_col=0);
 chrom_size_df_mm10.columns = ['len']
 
 chroms_mm10 = ['chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9',\
