@@ -112,8 +112,12 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
                         stats_score,pvalue = stats.ttest_rel(flat_ctrl,flat_treat)
                         pvalues.append(pvalue)
 
-                        rth_p = pvalues.sort()[int(len(pvalues)*p_percentage)]
+                        r = int(len(pvalues)*p_percentage)
+                        rth_p = pvalues.sort()[r]
 
+                        cdf = stats.beta.cdf(rth_p, r, 2*int(len(pvalues)-r+1) #, loc=0, scale=1)
+
+                        pvalue = cdf
                         # got the rth order p-value, this should follow beta distribution
                         # to be continued
 
