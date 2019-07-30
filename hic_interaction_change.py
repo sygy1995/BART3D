@@ -114,20 +114,11 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
                             pvalue = 1
                         pvalues.append(pvalue)
 
-                        r = int(len(pvalues)*p_percentage)
-                        rth_p = pvalues.sort()[r]
+                    r = int(len(pvalues)*p_percentage)
+                    rth_p = pvalues.sort()[r]
 
-                        cdf = stats.beta.cdf(rth_p, r, 2*int(len(pvalues)-r+1) #, loc=0, scale=1)
-
-                        # got the rth order p-value, this should follow beta distribution
-                        # to be continued
-
-                # except:
-                #     index = int(treat_lines[i].strip().split(',')[0])
-                #     pvalue = 1
-                    # output data: chr start end . -10log(pvalue) .
-
-                compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, index, index+resolution, -np.log10(cdf)))
+                    cdf = stats.beta.cdf(rth_p, r, 2*int(len(pvalues)-r+1) #, loc=0, scale=1)
+                    compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, index, index+resolution, -np.log10(cdf)))
     compr_data_out.close()
             
 def main(viewregion,normalization,chrom):
