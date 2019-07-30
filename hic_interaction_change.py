@@ -110,6 +110,8 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
                         flat_ctrl = window_ctrl.flatten()
                         flat_treat = window_treat.flatten()
                         stats_score,pvalue = stats.ttest_rel(flat_ctrl,flat_treat)
+                        if np.isnan(pvalue):
+                            pvalue = 1
                         pvalues.append(pvalue)
 
                         r = int(len(pvalues)*p_percentage)
@@ -117,18 +119,15 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
 
                         cdf = stats.beta.cdf(rth_p, r, 2*int(len(pvalues)-r+1) #, loc=0, scale=1)
 
-                        pvalue = cdf
                         # got the rth order p-value, this should follow beta distribution
                         # to be continued
 
-                        if np.isnan(pvalue):
-                            pvalue = 1
                 # except:
                 #     index = int(treat_lines[i].strip().split(',')[0])
                 #     pvalue = 1
                     # output data: chr start end . -10log(pvalue) .
 
-                compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, index, index+resolution, -np.log10(pvalue)))
+                compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, index, index+resolution, -np.log10(cdf)))
     compr_data_out.close()
             
 def main(viewregion,normalization,chrom):
