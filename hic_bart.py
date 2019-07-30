@@ -74,7 +74,7 @@ def main(args):
     sys.stdout.write("Step4: pair test between control and treat..\n")
     
     # should be written as inputs
-    p_percentage = 0.4
+    p_percentage = 0.2
     window = 5
 
     hic_interaction_change.compare_hic_interaction([t_prefix, c_prefix], args.region, args.resolution, args.outdir, args.outdir, args.species,p_percentage,window)
