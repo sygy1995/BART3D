@@ -47,86 +47,87 @@ import utils
 
 def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_interaction_info_dir,outdir,species,p_percentage,window):
     treat,ctrl = compr_data[0],compr_data[1]
-    with open(outdir+os.sep+'{}_over_{}_res{}_view{}.bed'.format(treat,ctrl,resolution,viewregion),'w') as compr_data_out:
-        # output data: chr start end . -10log(pvalue) .
-        # compr_data_out.write('{}\t{}\t{}\t{}\t{}\n'.format('id','stats','pvalue','treat_mean','ctrl_mean'))
+    compr_data_out = open(outdir+os.sep+'{}_over_{}_res{}_view{}.bed'.format(treat,ctrl,resolution,viewregion),'w')
 
-        columns = np.arange(-1*viewregion+resolution,viewregion,resolution)    
-           
-        if species=='hg38':
-            chroms = utils.chroms_hg38
-        elif species=='mm10':
-            chroms = utils.chroms_mm10
+    # output data: chr start end . -10log(pvalue) .
+    # compr_data_out.write('{}\t{}\t{}\t{}\t{}\n'.format('id','stats','pvalue','treat_mean','ctrl_mean'))
 
-        for chrom in chroms:
-            treat_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(treat,resolution,viewregion,chrom)
-            ctrl_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(ctrl,resolution,viewregion,chrom)
-            
-            if not (os.path.isfile(treat_hic_file) and os.path.isfile(ctrl_hic_file)):
-                continue
+    columns = np.arange(-1*viewregion+resolution,viewregion,resolution)    
+       
+    if species=='hg38':
+        chroms = utils.chroms_hg38
+    elif species=='mm10':
+        chroms = utils.chroms_mm10
 
-            with open(treat_hic_file) as treat_inf, open(ctrl_hic_file) as ctrl_inf:
-                treat_lines = treat_inf.readlines()
-                ctrl_lines = ctrl_inf.readlines()
-                # n is the total number of lines in a chrom interaction profile
-                n = len(treat_lines)
-                # m is the number of bins for each viewrigion
-                m = len(list(map(float,treat_lines[1].strip().split(',')))[1:])
-                loaded_lines_ctrl = np.zeros((window,m))
-                loaded_lines_treat = np.zeros((window,m))
-                for i in range(1,n):
+    for chrom in chroms:
+        treat_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(treat,resolution,viewregion,chrom)
+        ctrl_hic_file = hic_normalized_interaction_info_dir+os.sep+'{}_res{}_view{}_{}.csv'.format(ctrl,resolution,viewregion,chrom)
+        
+        if not (os.path.isfile(treat_hic_file) and os.path.isfile(ctrl_hic_file)):
+            continue
 
-                    # try:
+        with open(treat_hic_file) as treat_inf, open(ctrl_hic_file) as ctrl_inf:
+            treat_lines = treat_inf.readlines()
+            ctrl_lines = ctrl_inf.readlines()
+            # n is the total number of lines in a chrom interaction profile
+            n = len(treat_lines)
+            # m is the number of bins for each viewrigion
+            m = len(list(map(float,treat_lines[1].strip().split(',')))[1:])
+            loaded_lines_ctrl = np.zeros((window,m))
+            loaded_lines_treat = np.zeros((window,m))
+            for i in range(1,n):
 
-                    # treat_list = list(map(float,treat_lines[i].strip().split(',')))
-                    # ctrl_list = list(map(float,ctrl_lines[i].strip().split(',')))
-                    # index = int(treat_list[0])
-                    # view_pos_treat_data = treat_list[1:]
-                    # view_pos_ctrl_data = ctrl_list[1:]
-                    # stats_score,pvalue = stats.ttest_rel(view_pos_treat_data,view_pos_ctrl_data)
-                    if i < window:
-                        # load the lines from bottom if a window can not be fitted yet
-                        loaded_lines_ctrl[0:len(loaded_lines_ctrl)-1] = loaded_lines_ctrl[1:len(loaded_lines_ctrl)]
-                        loaded_lines_treat[0:len(loaded_lines_treat)-1] = loaded_lines_treat[1:len(loaded_lines_treat)]
-                        loaded_lines_ctrl[len(loaded_lines_ctrl)-1] = list(map(float,ctrl_lines[i].strip().split(',')))[1:]
-                        loaded_lines_treat[len(loaded_lines_treat)-1] = list(map(float,treat_lines[i].strip().split(',')))[1:]
-                        # loaded_lines_ctrl[i-1] = list(map(float,ctrl_lines[i].strip().split(',')))[1:]
-                        # loaded_lines_treat[i-1] = list(map(float,treat_lines[i].strip().split(',')))[1:]
-                    else:
-                        # 
-                        loaded_lines_ctrl[0:len(loaded_lines_ctrl)-1] = loaded_lines_ctrl[1:len(loaded_lines_ctrl)]
-                        loaded_lines_treat[0:len(loaded_lines_treat)-1] = loaded_lines_treat[1:len(loaded_lines_treat)]
-                        loaded_lines_ctrl[len(loaded_lines_ctrl)-1] = list(map(float,ctrl_lines[i].strip().split(',')))[1:]
-                        loaded_lines_treat[len(loaded_lines_treat)-1] = list(map(float,treat_lines[i].strip().split(',')))[1:]
-                        window_ctrl = np.zeros((window,window))
-                        window_treat = np.zeros((window,window))
+                # try:
 
-                        pvalues = []
-                        for j in range(m-window+1):
-                            for k in range(len(window)):
-                                window_ctrl[k] = loaded_lines_ctrl[k,j+(window-k-1)]
-                                window_treat[k] = loaded_lines_treat[k,j+(window-k-1)]
-                            flat_ctrl = window_ctrl.flatten()
-                            flat_treat = window_treat.flatten()
-                            stats_score,pvalue = stats.ttest_rel(flat_ctrl,flat_treat)
-                            if np.isnan(pvalue):
-                                pvalue = 1
-                            pvalues.append(pvalue)
+                # treat_list = list(map(float,treat_lines[i].strip().split(',')))
+                # ctrl_list = list(map(float,ctrl_lines[i].strip().split(',')))
+                # index = int(treat_list[0])
+                # view_pos_treat_data = treat_list[1:]
+                # view_pos_ctrl_data = ctrl_list[1:]
+                # stats_score,pvalue = stats.ttest_rel(view_pos_treat_data,view_pos_ctrl_data)
+                if i < window:
+                    # load the lines from bottom if a window can not be fitted yet
+                    loaded_lines_ctrl[0:len(loaded_lines_ctrl)-1] = loaded_lines_ctrl[1:len(loaded_lines_ctrl)]
+                    loaded_lines_treat[0:len(loaded_lines_treat)-1] = loaded_lines_treat[1:len(loaded_lines_treat)]
+                    loaded_lines_ctrl[len(loaded_lines_ctrl)-1] = list(map(float,ctrl_lines[i].strip().split(',')))[1:]
+                    loaded_lines_treat[len(loaded_lines_treat)-1] = list(map(float,treat_lines[i].strip().split(',')))[1:]
+                    # loaded_lines_ctrl[i-1] = list(map(float,ctrl_lines[i].strip().split(',')))[1:]
+                    # loaded_lines_treat[i-1] = list(map(float,treat_lines[i].strip().split(',')))[1:]
+                else:
+                    # 
+                    loaded_lines_ctrl[0:len(loaded_lines_ctrl)-1] = loaded_lines_ctrl[1:len(loaded_lines_ctrl)]
+                    loaded_lines_treat[0:len(loaded_lines_treat)-1] = loaded_lines_treat[1:len(loaded_lines_treat)]
+                    loaded_lines_ctrl[len(loaded_lines_ctrl)-1] = list(map(float,ctrl_lines[i].strip().split(',')))[1:]
+                    loaded_lines_treat[len(loaded_lines_treat)-1] = list(map(float,treat_lines[i].strip().split(',')))[1:]
+                    window_ctrl = np.zeros((window,window))
+                    window_treat = np.zeros((window,window))
 
-                            r = int(len(pvalues)*p_percentage)
-                            rth_p = pvalues.sort()[r]
+                    pvalues = []
+                    for j in range(m-window+1):
+                        for k in range(len(window)):
+                            window_ctrl[k] = loaded_lines_ctrl[k,j+(window-k-1)]
+                            window_treat[k] = loaded_lines_treat[k,j+(window-k-1)]
+                        flat_ctrl = window_ctrl.flatten()
+                        flat_treat = window_treat.flatten()
+                        stats_score,pvalue = stats.ttest_rel(flat_ctrl,flat_treat)
+                        if np.isnan(pvalue):
+                            pvalue = 1
+                        pvalues.append(pvalue)
 
-                            cdf = stats.beta.cdf(rth_p, r, 2*int(len(pvalues)-r+1) #, loc=0, scale=1)
+                        r = int(len(pvalues)*p_percentage)
+                        rth_p = pvalues.sort()[r]
 
-                            # got the rth order p-value, this should follow beta distribution
-                            # to be continued
+                        cdf = stats.beta.cdf(rth_p, r, 2*int(len(pvalues)-r+1) #, loc=0, scale=1)
 
-                    # except:
-                    #     index = int(treat_lines[i].strip().split(',')[0])
-                    #     pvalue = 1
-                        # output data: chr start end . -10log(pvalue) .
+                        # got the rth order p-value, this should follow beta distribution
+                        # to be continued
 
-                    compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, index, index+resolution, -np.log10(cdf)))
+                # except:
+                #     index = int(treat_lines[i].strip().split(',')[0])
+                #     pvalue = 1
+                    # output data: chr start end . -10log(pvalue) .
+
+                compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, index, index+resolution, -np.log10(cdf)))
     compr_data_out.close()
             
 def main(viewregion,normalization,chrom):
