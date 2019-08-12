@@ -95,6 +95,7 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
                     # loaded_lines_treat[i-1] = list(map(float,treat_lines[i].strip().split(',')))[1:]
                 else:
                     # 
+                    index = int(list(map(float,treat_lines[i].strip().split(',')))[0]-resolution*((window-1)/2))
                     loaded_lines_ctrl[0:len(loaded_lines_ctrl)-1] = loaded_lines_ctrl[1:len(loaded_lines_ctrl)]
                     loaded_lines_treat[0:len(loaded_lines_treat)-1] = loaded_lines_treat[1:len(loaded_lines_treat)]
                     loaded_lines_ctrl[len(loaded_lines_ctrl)-1] = list(map(float,ctrl_lines[i].strip().split(',')))[1:]
@@ -104,7 +105,7 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
 
                     pvalues = []
                     for j in range(m-window+1):
-                        for k in range(len(window)):
+                        for k in range(window):
                             window_ctrl[k] = loaded_lines_ctrl[k,j+(window-k-1)]
                             window_treat[k] = loaded_lines_treat[k,j+(window-k-1)]
                         flat_ctrl = window_ctrl.flatten()
@@ -115,9 +116,10 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
                         pvalues.append(pvalue)
 
                     r = int(len(pvalues)*p_percentage)
-                    rth_p = pvalues.sort()[r]
+                    pvalues.sort()
+                    rth_p = pvalues[r]
 
-                    cdf = stats.beta.cdf(rth_p, r, 2*int(len(pvalues)-r+1) #, loc=0, scale=1)
+                    cdf = stats.beta.cdf(rth_p, r, 2*int(len(pvalues)-r+1)) #, loc=0, scale=1)
                     compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, index, index+resolution, -np.log10(cdf)))
     compr_data_out.close()
             
