@@ -72,12 +72,7 @@ def main(args):
     print('normalizing '+str(tock))
     # output: {treat}_over_{control}_res{}_view{}.csv
     sys.stdout.write("Step4: pair test between control and treat..\n")
-    
-    # should be written as inputs
-    p_percentage = 0.2
-    window = 5
-
-    hic_interaction_change.compare_hic_interaction([t_prefix, c_prefix], args.region, args.resolution, args.outdir, args.outdir, args.species,p_percentage,window)
+    hic_interaction_change.compare_hic_interaction([t_prefix, c_prefix], args.region, args.resolution, args.outdir, args.outdir, args.species)
 
     tock = time.time()-tick
     print('finished '+str(tock))
