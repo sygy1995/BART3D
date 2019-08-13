@@ -5,7 +5,7 @@ import pandas as pd
 ##########################################
 ## basic models for commonly used data 
 ##########################################
-chrom_size_file_hg38 = 'hg38_clean.chrom.sizes'
+chrom_size_file_hg38 = '/home/yifan/Documents/hic_bart/hg38_clean.chrom.sizes'
 chrom_size_df_hg38 = pd.read_csv(chrom_size_file_hg38,sep='\t',header=None,index_col=0);
 chrom_size_df_hg38.columns = ['len']
 
@@ -13,7 +13,7 @@ chroms_hg38 = ['chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9',\
              'chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17',\
              'chr18','chr19','chr20','chr21','chr22','chrX','chrY']
 
-chrom_size_file_mm10 = 'mm10_clean.chrom.sizes'
+chrom_size_file_mm10 = '/home/yifan/Documents/hic_bart/mm10_clean.chrom.sizes'
 chrom_size_df_mm10 = pd.read_csv(chrom_size_file_mm10,sep='\t',header=None,index_col=0);
 chrom_size_df_mm10.columns = ['len']
 
@@ -41,6 +41,16 @@ def get_resolution(hic_index_file):
     resolution = int(line[2])-int(line[1])
     findex.close()
     return resolution
+
+def get_index(order_index_file):
+    f = open(order_index_file)
+    index = {}
+    for line in f:
+        sline = line.strip().split()
+        if sline[0] not in index:
+            index[sline[0]] = {}
+        index[sline[0]][int(sline[3])] = int(sline[1])
+    return index
 
 # get matrix df according to view region, default=500,000bps
 # def get_matrix_df(matrix_file, view_region):
