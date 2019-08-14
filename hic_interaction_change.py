@@ -80,11 +80,13 @@ def compare_hic_interaction(compr_data,viewregion,resolution,hic_normalized_inte
                     stats_score,pvalue = stats.ttest_rel(view_pos_treat_data,view_pos_ctrl_data)
                     if np.isnan(pvalue):
                         pvalue = 1
+                        stats_score = 0
                 except:
                     index = int(treat_lines[i].strip().split(',')[0])
                     pvalue = 1
+                    stats_score = 0
                     # output data: chr start end . -10log(pvalue) .
-                compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, index, index+resolution, -np.log10(pvalue)))
+                compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\t{:.3f}\n'.format(chrom, index, index+resolution, stats_score, -stats_score))
     compr_data_out.close()
             
 def main(viewregion,normalization,chrom):
