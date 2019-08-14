@@ -19,9 +19,6 @@ def get_normalized_viewpoint_interaction(chrom,index,matrix_df,region,resolution
 	    chrome_index_range[chrom] = [min(index[chrom].keys()),max(index[chrom].keys())]
 
 	# for chrom in chroms:
-
-	chrom = 'chr1'
-
 	# assume that the matrix file is already sorted
 	# bisect out the first and last id1 that is in this chromosome
 	low1 = bisect.bisect_left(matrix_df['id1'],chrome_index_range[chrom][0])
