@@ -5,7 +5,8 @@ import pandas as pd
 ##########################################
 ## basic models for commonly used data 
 ##########################################
-chrom_size_file_hg38 = 'hg38_clean.chrom.sizes'
+current_dir = os.path.dirname(os.path.realpath(__file__))
+chrom_size_file_hg38 = os.path.join(current_dir,'hg38_clean.chrom.sizes')
 chrom_size_df_hg38 = pd.read_csv(chrom_size_file_hg38,sep='\t',header=None,index_col=0);
 chrom_size_df_hg38.columns = ['len']
 
@@ -13,7 +14,7 @@ chroms_hg38 = ['chr1','chr2','chr3','chr4','chr5','chr6','chr7','chr8','chr9',\
              'chr10','chr11','chr12','chr13','chr14','chr15','chr16','chr17',\
              'chr18','chr19','chr20','chr21','chr22','chrX','chrY']
 
-chrom_size_file_mm10 = 'mm10_clean.chrom.sizes'
+chrom_size_file_mm10 = os.path.join(current_dir,'mm10_clean.chrom.sizes')
 chrom_size_df_mm10 = pd.read_csv(chrom_size_file_mm10,sep='\t',header=None,index_col=0);
 chrom_size_df_mm10.columns = ['len']
 
