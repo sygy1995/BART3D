@@ -6,7 +6,7 @@ from scipy import stats
 import utils
 
 def compare_hic_interaction(control_np,treatment_np,resolution,file,chrom,species):
-	compr_data_out = open(file,'w')
+	compr_data_out = open(file,'a')
 
 	bin_number = len(control_np)
 	test = 0
