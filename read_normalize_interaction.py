@@ -49,8 +49,7 @@ def get_normalized_viewpoint_interaction(chrom,index,matrix_df,region,resolution
 	#interaction_list = list(repeat(list(repeat(0,len(df_cols))),len(df_index)))
 	interaction_np = np.zeros((len(df_index),len(df_cols)))
 	# write interactions into the dataframe
-	test1 = []
-	test2 = []
+
 	matrix_list_intra = list(zip(matrix_df_intra['id1'],matrix_df_intra['id2'],matrix_df_intra['count']))
 	zero_position = int(region/resolution)-1
 
