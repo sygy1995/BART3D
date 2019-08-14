@@ -15,3 +15,4 @@ def compare_hic_interaction(control_np,treatment_np,resolution,file,chrom,specie
 	        pvalue = 1
 	    start = i*resolution
 	    compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, start, start+resolution, -np.log10(pvalue)))
+	sys.stdout.write("Written {} bins for chromosome {}..\n".format(i+1,chrom))
