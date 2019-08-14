@@ -13,6 +13,7 @@ def compare_hic_interaction(control_np,treatment_np,resolution,file,chrom,specie
 	    stats_score,pvalue = stats.ttest_rel(treatment_np[i],control_np[i])
 	    if np.isnan(pvalue):
 	        pvalue = 1
+	        stats_score = 0
 	    start = i*resolution
-	    compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\n'.format(chrom, start, start+resolution, -np.log10(pvalue)))
+	    compr_data_out.write('{}\t{}\t{}\t.\t{:.3f}\t.\t{:.3f}\n'.format(chrom, start, start+resolution, stats_score, -stats_score))
 	sys.stdout.write("Written {} bins for chromosome {}..\n".format(i+1,chrom))
