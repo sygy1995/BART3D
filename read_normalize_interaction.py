@@ -14,15 +14,13 @@ def get_normalized_viewpoint_interaction(chrom,index,matrix_df,region,resolution
 	    chroms = utils.chroms_mm10
 	    chrom_sizes = utils.chrom_size_df_mm10
 	    
-	chrome_index_range = {}
-	for chrom in chroms:
-	    chrome_index_range[chrom] = [min(index[chrom].keys()),max(index[chrom].keys())]
+	chrome_index_range = [min(index[chrom].keys()),max(index[chrom].keys())]
 
 	# for chrom in chroms:
 	# assume that the matrix file is already sorted
 	# bisect out the first and last id1 that is in this chromosome
-	low1 = bisect.bisect_left(matrix_df['id1'],chrome_index_range[chrom][0])
-	high1 = bisect.bisect_right(matrix_df['id1'],chrome_index_range[chrom][1])
+	low1 = bisect.bisect_left(matrix_df['id1'],chrome_index_range[0])
+	high1 = bisect.bisect_right(matrix_df['id1'],chrome_index_range[1])
 	# save all interaction starts with this chromosome into a distinct dataframe
 	matrix_df_intra = matrix_df[low1:high1]
 	# sort this chromosomal specific interaction matrix by id2
@@ -30,8 +28,8 @@ def get_normalized_viewpoint_interaction(chrom,index,matrix_df,region,resolution
 	# reassign the index to be from 0 to length
 	matrix_df_intra = matrix_df_intra.set_index(pd.Index(list(range(0,len(matrix_df_intra)))))
 	# bisect out the first and last id2 that is in this chromosome
-	low2 = bisect.bisect_left(matrix_df_intra['id2'],chrome_index_range[chrom][0])
-	high2 = bisect.bisect_right(matrix_df_intra['id2'],chrome_index_range[chrom][1])
+	low2 = bisect.bisect_left(matrix_df_intra['id2'],chrome_index_range[0])
+	high2 = bisect.bisect_right(matrix_df_intra['id2'],chrome_index_range[1])
 	# update this chromosomal specific interaction matrix with interaction that both id1 and id2 are in this chromosome
 	matrix_df_intra = matrix_df_intra[low2:high2]
 	# sort this chromosomal specific interaction matrix by id1 and then id2
