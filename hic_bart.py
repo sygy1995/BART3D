@@ -40,6 +40,7 @@ def main(args):
     matrix_df_treatment = pd.read_csv(args.t_matrix,sep='\t',header=None)
     matrix_df_treatment.columns = ['id1','id2','count']
 
+    
     # get index dict
     index = utils.get_index(args.c_index)
 
