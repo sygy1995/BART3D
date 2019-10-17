@@ -141,4 +141,4 @@ If specified, all output files will be written to that directory. Default: the c
    |   PR   |        6.690        |    1.118e-11     |  2.647  |  0.640  |     0.030     | 1.158e-04          |
    | RAD21  |        8.222        |    1.003e-16     |  3.008  |  0.537  |     0.034     | 1.712e-04          |
 
-3. **interactions.bed** is the differential interaction profile from the HiC interaction matrices.
+3. **name_interactions.bed** is the differential interaction profile from the HiC interaction matrices.
