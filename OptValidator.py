@@ -39,21 +39,6 @@ def opt_validate(options):
     if not options.outdir:
         options.outdir = os.path.join(os.getcwd(), 'bart_output') # create output directory at current working directory
 
-    if not options.ofilename:
-        # input only contains .bam/.bed/.txt
-        infilebase = os.path.basename(options.infile)
-        if infilebase.endswith('.bam'):
-            infilebase = infilebase.split('.bam')[0]
-        elif infilebase.endswith('.bed'):
-            infilebase = infilebase.split('.bed')[0]
-        elif infilebase.endswith('.txt'):
-            infilebase = infilebase.split('.txt')[0]
-        options.ofilename = os.path.join(options.outdir, infilebase) # xxx(.txt/.bed/.bam)
-    else:
-        # in case user enter a directory
-        options.ofilename = os.path.basename(options.ofilename)
-        options.ofilename = os.path.join(options.outdir, options.ofilename)
-
     # === hg38 ===
     if options.species == 'hg38':   
         if config['path']['hg38_library_dir']:
@@ -63,12 +48,8 @@ def opt_validate(options):
         print("Library directory:" + data_dir)
 
         # file for standardization
-        if options.subcommand_name == 'geneset':
-            options.normfile = data_dir+os.sep+'bart2_hg38_MSigDB.dat'
-        elif options.subcommand_name == 'profile':
-            options.normfile = data_dir+os.sep+'bart2_hg38_H3K27ac.dat'
-        elif options.subcommand_name == 'region':
-            options.normfile = data_dir+os.sep+'bart2_hg38_H3K27ac.dat'
+
+        options.normfile = data_dir+os.sep+'bart2_hg38_H3K27ac.dat'
 
     # === mm10 ===
     elif options.species == 'mm10': 
@@ -79,12 +60,8 @@ def opt_validate(options):
         print("Library directory:" + data_dir)
         
         # file for standardization
-        if options.subcommand_name == 'geneset':
-            options.normfile = os.path.join(data_dir, 'bart2_mm10_H3K27ac.dat')
-        elif options.subcommand_name == 'profile':
-            options.normfile = os.path.join(data_dir, 'bart2_mm10_H3K27ac.dat')
-        elif options.subcommand_name == 'region':
-            options.normfile = os.path.join(data_dir, 'bart2_mm10_H3K27ac.dat')
+
+        options.normfile = os.path.join(data_dir, 'bart2_mm10_H3K27ac.dat')
 
     # used for generating cis-regulatory profile
     options.rp = data_dir+os.sep+'bart2_'+options.species+'_RP.h5'

@@ -13,7 +13,11 @@ import OptValidator
 
 import time
 
-def main(args):
+def main(options):
+    # get library dirs
+    args = OptValidator.opt_validate(options)
+
+
     os.makedirs(args.outdir, exist_ok=True)
 
     tick = time.time()
@@ -66,10 +70,25 @@ def main(args):
         compare_hic_interaction(interaction_normalized_control_np,interaction_normalized_treatment_np,args.resolution,output_file_name_up,output_file_name_down,chrom,args.species)
 
     # Region BART part
-    # get library dirs
-    script_dir = os.path.dirname(os.path.realpath(__file__))
-    config = conf_validate(script_dir)
+    sys.stdout.write('Start mapping the differential interaction profiles onto UDHS...\n')
+    sys.stdout.flush()
+    counting_up = score_on_UDHS.score_on_DHS(args,output_file_name_up)
+    positions_up = sorted(counting_up.keys(),key=counting_up.get,reverse=True)
+    counting_down = score_on_UDHS.score_on_DHS(args,output_file_name_down)
+    positions_down = sorted(counting_down.keys(),key=counting_down.get,reverse=True)
 
+    sys.stdout.write('BART Prediction starts...\n\nRank all DHS...\n')
+    sys.stdout.flush()
+
+    ofile_up = args.outdir+os.sep+'{}_over_{}_TF_upinteraction'.format(t_prefix,c_prefix)
+    tf_aucs_up, tf_index_up = AUCcalc.cal_auc(args, positions_up,ofile_up)
+    ofile_down = args.outdir+os.sep+'{}_over_{}_TF_downinteraction'.format(t_prefix,c_prefix)
+    tf_aucs_down, tf_index_down = AUCcalc.cal_auc(args, positions_down,ofile_down)
+
+    stat_file_up = ofile_up + '_bart_results.txt'
+    stat_file_down = ofile_down + '_bart_results.txt'
+    StatTest.stat_test(tf_aucs_up, tf_index_up, stat_file_up, args.normfile)
+    StatTest.stat_test(tf_aucs_down, tf_index_down, stat_file_down, args.normfile)
 
     tock = time.time()-tick
     print('finished '+str(tock))
