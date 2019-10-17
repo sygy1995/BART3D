@@ -5,6 +5,11 @@ from read_normalize_interaction import get_normalized_viewpoint_interaction
 from get_interaction_change import compare_hic_interaction
 import pandas as pd
 import utils
+import score_on_UDHS
+import AUCcalc
+import StatTest
+import OptValidator
+
 
 import time
 
@@ -44,19 +49,27 @@ def main(args):
     index = utils.get_index(args.c_index)
 
     # initiaze output data
-    output_file_name = args.outdir+os.sep+'{}_over_{}_res{}_view{}.bed'.format(t_prefix,c_prefix,args.resolution,args.region)
-    compr_data_out = open(output_file_name,'w')
+    output_file_name_up = args.outdir+os.sep+'{}_over_{}_res{}_view{}_upinteractions.bed'.format(t_prefix,c_prefix,args.resolution,args.region)
+    output_file_name_down = args.outdir+os.sep+'{}_over_{}_res{}_view{}_downinteractions.bed'.format(t_prefix,c_prefix,args.resolution,args.region)
+    compr_data_out_up = open(output_file_name_up,'w')
+    compr_data_out_down = open(output_file_name_down,'w')
 
     # the rest of operations are divided to each chromosomes
     for chrom in chroms:
-        sys.stdout.write("Getting normalized Hi-C viewpoint interaction data from Juicer format for chromosome {}..\n".format(chrom))
+        sys.stdout.write("Getting normalized Hi-C viewpoint interaction data from HiC-Pro format for chromosome {}..\n".format(chrom))
 
         interaction_normalized_control_np = get_normalized_viewpoint_interaction(chrom,index,matrix_df_control,args.region,args.resolution,args.species)
         interaction_normalized_treatment_np = get_normalized_viewpoint_interaction(chrom,index,matrix_df_treatment,args.region,args.resolution,args.species)
 
         sys.stdout.write("Getting Hi-C viewpoint interaction change for chromosome {}..\n".format(chrom))
 
-        compare_hic_interaction(interaction_normalized_control_np,interaction_normalized_treatment_np,args.resolution,output_file_name,chrom,args.species)
+        compare_hic_interaction(interaction_normalized_control_np,interaction_normalized_treatment_np,args.resolution,output_file_name_up,output_file_name_down,chrom,args.species)
+
+    # Region BART part
+    # get library dirs
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    config = conf_validate(script_dir)
+
 
     tock = time.time()-tick
     print('finished '+str(tock))
@@ -72,7 +85,7 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--species',dest='species',type=str,metavar='<species>',choices=['hg38','mm10'],required=True,help='Species, please choose from "hg38" or "mm10".')
 
     parser.add_argument('-o', '--outdir', action='store', type=str, dest='outdir', help='output directory for Hi-C bart', metavar='<str>', default='hic_interaction_output/')
-    parser.add_argument('-r', '--region', action='store', type=int, dest='region', help='Regions to expand when finding interactions', metavar='<int>', default=500000)
+    parser.add_argument('-r', '--region', action='store', type=int, dest='region', help='Regions to expand when finding interactions', metavar='<int>', default=200000)
 
     args = parser.parse_args()
     if(len(sys.argv)) < 5: # two index, two matrix file, one species, are required

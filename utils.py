@@ -46,3 +46,15 @@ def get_index(order_index_file):
     return index
 
 
+def conf_validate(script_dir):
+    '''
+    Read user provided path from 'bart.conf' config file
+    '''
+    config = configparser.ConfigParser()
+    config_path = os.path.join(script_dir, 'bart.conf')
+    if not os.path.exists(config_path):
+        sys.stderr.write("CRITICAL: bart.conf does not exist in {}!\n".format(script_dir))
+        sys.exit(1)
+
+    config.read(config_path)
+    return config
