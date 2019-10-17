@@ -1,19 +1,16 @@
 import os, sys
 import argparse
 
-from read_normalize_interaction import get_normalized_viewpoint_interaction
-from get_interaction_change import compare_hic_interaction
+from hic_bart.read_normalize_interaction import get_normalized_viewpoint_interaction
+from hic_bart.get_interaction_change import compare_hic_interaction
 import pandas as pd
-import utils
-import score_on_UDHS
-import AUCcalc
-import StatTest
-import OptValidator
+from hic_bart import utils, score_on_UDHS, AUCcalc, StatTest, OptValidator
+
 
 
 import time
 
-def main(options):
+def hic_bart(options):
     # get library dirs
     args = OptValidator.opt_validate(options)
 
@@ -96,10 +93,10 @@ def main(options):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Identify transcription factors which may cause the different interactions between two Hi-C profiles.')
 
-    parser.add_argument('-ci', '--controlindex', action='store', type=str, dest='c_index', required=True, help='Hi-C index file for control', metavar='<str>')
-    parser.add_argument('-cm', '--controlmatrix', action='store', type=str, dest='c_matrix', required=True, help='Hi-C matrix file for control', metavar='<str>')
-    parser.add_argument('-ti', '--treatindex', action='store', type=str, dest='t_index', required=True, help='Hi-C index file for treat', metavar='<str>')
-    parser.add_argument('-tm', '--treatmatrix', action='store', type=str, dest='t_matrix', required=True, help='Hi-C matrix file for treat', metavar='<str>')
+    parser.add_argument('-ci', '--controlindex', action='store', type=str, dest='c_index', required=True, help='HiC-pro index file for control sample', metavar='<str>')
+    parser.add_argument('-cm', '--controlmatrix', action='store', type=str, dest='c_matrix', required=True, help='HiC-pro matrix file for control sample', metavar='<str>')
+    parser.add_argument('-ti', '--treatindex', action='store', type=str, dest='t_index', required=True, help='HiC-pro index file for treatment sample', metavar='<str>')
+    parser.add_argument('-tm', '--treatmatrix', action='store', type=str, dest='t_matrix', required=True, help='HiC-pro matrix file for treatment sample', metavar='<str>')
 
     parser.add_argument('-s', '--species',dest='species',type=str,metavar='<species>',choices=['hg38','mm10'],required=True,help='Species, please choose from "hg38" or "mm10".')
 
@@ -111,4 +108,4 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(1)
 
-    main(args)
+    hic_bart(args)

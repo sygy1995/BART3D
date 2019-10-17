@@ -1,14 +1,14 @@
 
-README for BART(1.0.3)
+README for HiC-BART(1.0.3)
 
 Introduction
 ============
 
-BART (Binding Analysis for Regulation of Transcription) is a bioinformatics tool for predicting functional transcription factors (TFs) that bind at genomic cis-regulatory regions to regulate gene expression in the human or mouse genomes, given a query gene set or a ChIP-seq dataset as input. BART leverages over 7,000 human TF binding profiles and over 5,000 mouse TF binding profiles from the public domain (collected in Cistrome Data Browser) to make the prediction.
+HiC-BART (Binding Analysis for Regulation of Transcription with Hi-C) is a bioinformatics tool for predicting functional transcription factors (TFs) that is accociated with change in chromatin interaction in the human or mouse genomes, given a differential interaction profile calculated from HiC interaction matrices. HiC-BART leverages over 7,000 human TF binding profiles and over 5,000 mouse TF binding profiles from the public domain (collected in Cistrome Data Browser) to make the prediction.
 
-BART is implemented in Python and distributed as an open-source package along with necessary data libraries.
+HiC-BART is implemented in Python and distributed as an open-source package along with necessary data libraries.
 
-**BART is developed and maintained by the Chongzhi Zang Lab at the University of Virginia.**
+**HiC-BART is developed and maintained by the Chongzhi Zang Lab at the University of Virginia.**
 
 
 
