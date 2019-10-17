@@ -27,8 +27,8 @@ HiC-BART uses Python's distutils tools for source installation. Before installin
 To install a source distribution of HiC-BART, unpack the distribution tarball and open up a command terminal. Go to the directory where you unpacked BART, and simply run the install script an install BART globally or locally. For example, if you want to install the package HiC-BART-v1.0.0-py3-full.tar.gz:
 
 ```shell
-$ tar zxf HiC-BART-v1.0.0-py3-full.tar.gz
-$ cd HiC-BART-v1.0.0-py3-full
+$ tar zxf HiC-BART-v1.0.0.tar.gz
+$ cd HiC-BART-v1.0.0
 ```
 
 Install with root/administrator permission (by default, the script will install python library and executable codes globally):
