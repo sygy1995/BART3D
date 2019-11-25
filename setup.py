@@ -26,7 +26,7 @@ def main():
         sys.stderr.write("CRITICAL: Python version must be higher than or equal to 3.0!\n")
         sys.exit(1)
         
-    setup(name="HiC_BART",
+    setup(name="3D_BART",
           version=hic_bart.__version__,
           description="Binding Analysis for Regulatory Transcription Factors with HiC",
           long_description=long_descr,
