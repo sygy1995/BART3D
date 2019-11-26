@@ -24,7 +24,6 @@ except:
     sys.path.append(os.path.join(script_dir, "../"))
     import BART3D
 from BART3D.main import BART3D
-BART3D_version = BART3D.__version__
 
 
 def prepare_argparser():
