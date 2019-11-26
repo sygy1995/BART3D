@@ -35,7 +35,7 @@ def main():
           url='https://github.com/zanglab/BART3D',
           packages=find_packages(exclude=['tests']),#['BART'],
           # packages=['BART'],
-          package_data={'':['bart.conf'],
+          package_data={'':['bart.conf','hg38_clean.chrom.sizes','mm10_clean.chrom.sizes'],
                         'BART':['hg38_library/*.dat',
                                 'hg38_library/*.bed',
                                 'hg38_library/*.json',
