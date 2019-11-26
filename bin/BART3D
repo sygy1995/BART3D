@@ -31,7 +31,7 @@ def prepare_argparser():
     """
     Prepare optparser object.
     """    
-    description = '''%(prog)s -- Binding Analysis for Regulation of Transcription with Hi-C \n
+    description = '''%(prog)s -- Binding Analysis for Regulation of Transcription for 3D genomics data \n
     BART3D predicts transcription factors (TFs) that function to regulate \n
     a differential 3D genomics interaction profile calculated from raw interaction matrix \n
     by leveraging a large collection of publicly available ChIP-seq data in \n
