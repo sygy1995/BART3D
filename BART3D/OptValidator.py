@@ -36,8 +36,8 @@ def opt_validate(options):
     '''
     config = conf_validate()
 
-    if not options.outdir or options.outdir=='hic_bart_output/':
-        options.outdir = os.path.join(os.getcwd(), 'hicbart_output') # create output directory at current working directory
+    if not options.outdir or options.outdir=='BART3D_output/':
+        options.outdir = os.path.join(os.getcwd(), 'BART3D_output') # create output directory at current working directory
 
     # === hg38 ===
     if options.species == 'hg38':   

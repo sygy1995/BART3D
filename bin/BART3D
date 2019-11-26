@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Description: HiC-BART main executable
+"""Description: BART3D main executable
 
 Copyright (c) 2018, 2019 Chongzhi Zang, Yifan Zhang <yz4hc@virginia.edu>, Zhenjia Wang
 
@@ -19,12 +19,12 @@ import configparser
 script_dir = os.path.dirname(os.path.realpath(__file__))
 
 try:
-    import hic_bart
+    import BART3D
 except:
     sys.path.append(os.path.join(script_dir, "../"))
-    import hic_bart
-from hic_bart.main import hic_bart
-hic_bart_version = hic_bart.__version__
+    import BART3D
+from BART3D.main import BART3D
+BART3D_version = BART3D.__version__
 
 
 def prepare_argparser():
@@ -33,8 +33,8 @@ def prepare_argparser():
     Prepare optparser object.
     """    
     description = '''%(prog)s -- Binding Analysis for Regulation of Transcription with Hi-C \n
-    HiC-BART predicts transcription factors (TFs) that function to regulate \n
-    a differential HiC interaction profile calculated from raw interaction matrix \n
+    BART3D predicts transcription factors (TFs) that function to regulate \n
+    a differential 3D genomics interaction profile calculated from raw interaction matrix \n
     by leveraging a large collection of publicly available ChIP-seq data in \n
     human and mouse.'''
     epilog = "For command line options of each command, type: %(prog)s COMMAND -h"
@@ -48,7 +48,7 @@ def prepare_argparser():
 
     parser.add_argument('-s', '--species',dest='species',type=str,metavar='<species>',choices=['hg38','mm10'],required=True,help='Species, please choose from "hg38" or "mm10".')
 
-    parser.add_argument('-o', '--outdir', action='store', type=str, dest='outdir', help='output directory for Hi-C bart', metavar='<str>', default='hic_bart_output/')
+    parser.add_argument('-o', '--outdir', action='store', type=str, dest='outdir', help='output directory for Hi-C bart', metavar='<str>', default='BART3D_output/')
     parser.add_argument('-r', '--region', action='store', type=int, dest='region', help='Regions to expand when finding interactions', metavar='<int>', default=200000)
 
     args = parser.parse_args()
@@ -68,8 +68,8 @@ def main():
         argparser.print_help()
         exit(1)  
 
-    sys.stdout.write('\nHiC-BART -- Binding Analysis for Regulation of Transcription with Hi-C\n\n')
-    hic_bart(args)
+    sys.stdout.write('\nBART3D -- Binding Analysis for Regulation of Transcription with Hi-C\n\n')
+    BART3D(args)
 
 if __name__=='__main__':
     try:

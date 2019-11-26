@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import bisect
-import hic_bart.utils as utils
+import BART3D.utils as utils
 
 def get_normalized_viewpoint_interaction(chrom,index,matrix_df,region,resolution,species):
 

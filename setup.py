@@ -12,7 +12,7 @@ under the terms of the BSD License.
 '''
 import sys
 from setuptools import setup, find_packages
-import hic_bart
+import BART3D
 
 with open("README.md", "rb") as f:
     long_descr = f.read().decode("utf-8")
@@ -26,13 +26,13 @@ def main():
         sys.stderr.write("CRITICAL: Python version must be higher than or equal to 3.0!\n")
         sys.exit(1)
         
-    setup(name="HiC_BART",
-          version=hic_bart.__version__,
-          description="Binding Analysis for Regulatory Transcription Factors with HiC",
+    setup(name="BART3D",
+          version=BART3D.__version__,
+          description="Binding Analysis for Regulatory Transcription Factors for 3D genomics data",
           long_description=long_descr,
           author='Yifan Zhang, Zhanjia Wang, Chongzhi Zang',
           author_email='yz4hc@virginia.edu, zhenjia@virginia.edu',
-          url='https://github.com/zanglab/hic_bart',
+          url='https://github.com/zanglab/BART3D',
           packages=find_packages(exclude=['tests']),#['BART'],
           # packages=['BART'],
           package_data={'':['bart.conf'],
@@ -47,7 +47,7 @@ def main():
                                 'mm10_library/*.h5',
                                 'mm10_library/mm10_test_data/*'],},
           # include_package_data=True,
-          scripts=['bin/hic_bart',],
+          scripts=['bin/BART3D',],
           classifiers=[
               'Development Status :: 4 - Beta',
               'Environment :: Console',

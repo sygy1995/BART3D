@@ -1,16 +1,16 @@
 import os, sys
 import argparse
 
-from hic_bart.read_normalize_interaction import get_normalized_viewpoint_interaction
-from hic_bart.get_interaction_change import compare_hic_interaction
+from BART3D.read_normalize_interaction import get_normalized_viewpoint_interaction
+from BART3D.get_interaction_change import compare_hic_interaction
 import pandas as pd
-from hic_bart import utils, score_on_UDHS, AUCcalc, StatTest, OptValidator
+from BART3D import utils, score_on_UDHS, AUCcalc, StatTest, OptValidator
 
 
 
 import time
 
-def hic_bart(options):
+def BART3D(options):
     # get library dirs
     args = OptValidator.opt_validate(options)
 
@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-s', '--species',dest='species',type=str,metavar='<species>',choices=['hg38','mm10'],required=True,help='Species, please choose from "hg38" or "mm10".')
 
-    parser.add_argument('-o', '--outdir', action='store', type=str, dest='outdir', help='output directory for Hi-C bart', metavar='<str>', default='hic_interaction_output/')
+    parser.add_argument('-o', '--outdir', action='store', type=str, dest='outdir', help='output directory for Hi-C bart', metavar='<str>', default='BART3D_output/')
     parser.add_argument('-r', '--region', action='store', type=int, dest='region', help='Regions to expand when finding interactions', metavar='<int>', default=200000)
 
     args = parser.parse_args()
@@ -108,4 +108,4 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(1)
 
-    hic_bart(args)
+    BART3D(args)

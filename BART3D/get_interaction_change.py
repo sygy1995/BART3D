@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-import hic_bart.utils as utils
+import BART3D.utils as utils
 
 def compare_hic_interaction(control_np,treatment_np,resolution,file_up,file_down,chrom,species):
 	compr_data_out_up = open(file_up,'a')

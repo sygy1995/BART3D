@@ -1,21 +1,21 @@
 
-README for HiC-BART(1.0.3)
+README for BART3D(1.0.0)
 
 Introduction
 ============
 
-HiC-BART (Binding Analysis for Regulation of Transcription with Hi-C) is a bioinformatics tool for predicting functional transcription factors (TFs) that is accociated with change in chromatin interaction in the human or mouse genomes, given a differential interaction profile calculated from HiC interaction matrices. HiC-BART leverages over 7,000 human TF binding profiles and over 5,000 mouse TF binding profiles from the public domain (collected in Cistrome Data Browser) to make the prediction.
+BART3D (Binding Analysis for Regulation of Transcription with 3D genomics data) is a bioinformatics tool for predicting functional transcription factors (TFs) that are associated with changes in chromatin interaction in the human or mouse genomes, given a differential interaction profile calculated from 3D genomics data interaction matrices. BART3D leverages over 7,000 human TF binding profiles and over 5,000 mouse TF binding profiles from the public domain (collected in Cistrome Data Browser) to make the prediction.
 
-HiC-BART is implemented in Python and distributed as an open-source package along with necessary data libraries.
+BART3D is implemented in Python and distributed as an open-source package along with necessary data libraries.
 
-**HiC-BART is developed and maintained by the Chongzhi Zang Lab at the University of Virginia.**
+**BART3D is developed and maintained by the Chongzhi Zang Lab at the University of Virginia.**
 
 
 
 # Installation
 #### Prerequisites
 
-HiC-BART uses Python's distutils tools for source installation. Before installing HiC-BART, please make sure Python3 (Python 3.3 or higher is recommended) is installed in the system, and the following python packages are installed:
+BART3D uses Python's distutils tools for source installation. Before installing BART3D, please make sure Python3 (Python 3.3 or higher is recommended) is installed in the system, and the following python packages are installed:
 
 - setuptools
 - numpy
@@ -24,14 +24,21 @@ HiC-BART uses Python's distutils tools for source installation. Before installin
 
 #### Install the full package (All data included, requires at least 15GB hard drive storage in the installation directory)
 
-To install a source distribution of HiC-BART, unpack the distribution tarball and open up a command terminal. Go to the directory where you unpacked BART, and simply run the install script an install BART globally or locally. For example, if you want to install the package HiC-BART-v1.0.0-py3-full.tar.gz:
+To install a source distribution of BART3D, unpack the distribution tarball and open up a command terminal. Go to the directory where you unpacked BART, and simply run the install script an install BART globally or locally. For example, if you want to install the package BART3D-v1.0.0-py3-full.tar.gz:
 
 ```shell
-$ tar zxf HiC-BART-v1.0.0.tar.gz
-$ cd HiC-BART-v1.0.0
+$ tar zxf BART3D-v1.0.0.tar.gz
+$ cd BART3D-v1.0.0
 ```
 
-Install with root/administrator permission (by default, the script will install python library and executable codes globally):
+Alternatively, you can install BART3D from the GitHub repository.
+
+```shell
+$ https://github.com/sygy1995/BART3D.git
+$ cd BART3D
+```
+
+Install with root/administrator permission (by default, the script will install BART3D python library and executable codes globally):
 
 ```shell
 $ python setup.py install
@@ -65,7 +72,7 @@ You can download the Human or Mouse Data Library separately under your own direc
 
 `hg38_library_dir = /path/to/library/`
 
-Then you can run the install script and install BART source package globally or locally same as the full package described above.
+Then you can run the install script and install the BART3D source package globally or locally the same as the full package described above.
 
 
 
@@ -77,9 +84,9 @@ Positional arguments {geneset,profile}
 
 Given a differential interaction HiC matrices, predict functional transcription factors that regulate these genes.
 
-**Usage**:	`hic_bart [-h] -ci <index control> -cm <matrix control> -ti <index treatment> -tm <matrix treatment> -s <species> [-o <outdir>] [-r <view regions>]`
+**Usage**:	`BART3D [-h] -ci <index control> -cm <matrix control> -ti <index treatment> -tm <matrix treatment> -s <species> [-o <outdir>] [-r <view regions>]`
 
-**Example**:	hic_bart -ci control_5000_abs.bed -cm control_5000.matrix -ti treatment_5000_abs.bed -tm treatment_5000.matrix -s hg38 -o bart_output
+**Example**:	BART3D -ci control_5000_abs.bed -cm control_5000.matrix -ti treatment_5000_abs.bed -tm treatment_5000.matrix -s hg38 -o bart_output
 
 **Input arguments**:
 
@@ -141,4 +148,4 @@ If specified, all output files will be written to that directory. Default: the c
    |   PR   |        6.690        |    1.118e-11     |  2.647  |  0.640  |     0.030     | 1.158e-04          |
    | RAD21  |        8.222        |    1.003e-16     |  3.008  |  0.537  |     0.034     | 1.712e-04          |
 
-3. **name_interactions.bed** files are the differential interaction profile from the HiC interaction matrices. There will be one file for up-regulated and down regulated interactions each (treatment against control).
+3. **name_interactions.bed** files are the differential interaction profile from the HiC interaction matrices. There will be one file for increased and decreased interactions each (treatment against control).
