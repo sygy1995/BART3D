@@ -1,6 +1,8 @@
 
 README for BART3D(1.0.0)
 
+**for the newest version, please refer to https://github.com/zanglab/bart3d**
+
 Introduction
 ============
 
